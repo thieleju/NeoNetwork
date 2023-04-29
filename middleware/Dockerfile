@@ -16,5 +16,10 @@ COPY . .
 # Expose port
 EXPOSE 3333
 
+RUN npm run build
+
+#  change directory to dist
+WORKDIR /app/dist
+
 # Start middleware
 CMD ["npm", "start"]
