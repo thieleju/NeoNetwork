@@ -33,6 +33,7 @@ app.use(fallback);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  console.log("⚡️[server]: Allowing requests from", process.env.FRONTEND);
 });
 
 // closes the driver when the process is terminated to terminate all network connections
