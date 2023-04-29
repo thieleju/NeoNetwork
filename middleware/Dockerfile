@@ -15,8 +15,6 @@ COPY . .
 
 # Expose port
 EXPOSE 3333
-#  print path and content
-RUN pwd && ls -la
 
 RUN npm run build
 
