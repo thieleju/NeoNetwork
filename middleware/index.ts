@@ -15,11 +15,20 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
 import users from "./routes/users.get";
+import user from "./routes/post.post";
+import post from "./routes/user.post";
+import addFriend from "./routes/addFriend.post";
+
 import fallback from "./routes/fallback.get";
 
 app.use(users);
+app.use(user);
+app.use(post);
+app.use(addFriend);
+
 app.use(fallback);
 
 app.listen(port, () => {
