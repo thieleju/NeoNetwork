@@ -16,10 +16,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-import data from "./routes/data.get";
+import users from "./routes/users.get";
 import fallback from "./routes/fallback.get";
 
-app.use(data);
+app.use(users);
 app.use(fallback);
 
 app.listen(port, () => {

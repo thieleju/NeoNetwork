@@ -1,22 +1,43 @@
-<script setup lang="ts">
-import HelloWorld from "./components/HelloWorld.vue";
-</script>
-
 <template>
-  <HelloWorld msg="Vite + Vue" />
+  <Home></Home>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+<script lang="ts">
+import { defineComponent } from "vue";
+import axios from "./plugins/axios";
+import Home from "./views/Home.vue";
+
+export default defineComponent({
+  name: "App",
+  components: {
+    Home,
+  },
+  data() {
+    return {
+      drawer: true,
+      users: [],
+      links: [
+        ["mdi-inbox-arrow-down", "Inbox"],
+        ["mdi-send", "Send"],
+        ["mdi-delete", "Trash"],
+        ["mdi-alert-octagon", "Spam"],
+      ],
+    };
+  },
+  mounted() {
+    this.get_users();
+  },
+  methods: {
+    get_users() {
+      axios
+        .get("/users")
+        .then((response) => {
+          this.users = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+});
+</script>
