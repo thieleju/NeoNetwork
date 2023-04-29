@@ -21,4 +21,4 @@ RUN pwd && ls -la
 RUN npm run build
 
 # Start middleware
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]
