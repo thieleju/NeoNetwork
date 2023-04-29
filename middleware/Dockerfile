@@ -15,8 +15,10 @@ COPY . .
 
 # Expose port
 EXPOSE 3333
+#  print path and content
+RUN pwd && ls -la
 
 RUN npm run build
 
 # Start middleware
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
