@@ -9,12 +9,12 @@ const port = process.env.PORT;
 dotenv.config();
 
 // use cors
-const corsOptions = {
-  origin: "http://127.0.0.1:5173",
-  optionsSuccessStatus: 200,
-};
+// const corsOptions = {
+//   origin: "http://127.0.0.1:5173",
+//   optionsSuccessStatus: 200,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 app.use(express.json());
 
 import users from "./routes/users.get";
