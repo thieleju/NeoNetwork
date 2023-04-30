@@ -49,141 +49,99 @@
     <v-main style="background-color: #424242">
       <v-container class="py-8 px-6" fluid>
         <v-row>
+          <!-- POSTS -->
           <v-col cols="8">
-            <posts :posts="posts"></posts>
+            <posts
+              :posts="posts"
+              :user_current="user_current"
+              @update="get_user"
+            ></posts>
           </v-col>
+          <!-- FRIENDS -->
           <v-col cols="4">
-            <v-card class="scrollable-card" height="550">
-              <v-toolbar
-                color="primary_dark"
-                title="Friends"
-                height="50"
-              ></v-toolbar>
-              <v-list class="px-6" v-if="friends.length > 0">
-                <v-list-item
-                  v-for="(friend, index) in friends"
-                  :key="index"
-                  link
-                  class="d-flex align-center"
-                >
-                  <template v-slot:prepend>
-                    <v-avatar class="my-1" color="grey-darken-3" size="55">
-                      <span class="white--text headline">{{ friend[0] }}</span>
-                    </v-avatar>
-                  </template>
-                  <v-list-item-content>
-                    <v-list-item-title>{{ friend }}</v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-              <!-- no friends -->
-              <v-card-text v-else>
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-content>
-                      <v-list-item-title>No friends yet</v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-card-text>
-            </v-card>
+            <friend-list
+              :friends="friends"
+              :current_user="user_current"
+              @open_profile="dialog_profile = true"
+              @add_friend="dialog_friend = true"
+            >
+            </friend-list>
           </v-col>
         </v-row>
+        <!-- CREATE POST BUTTON -->
+        <!-- <VLayoutItem model-value position="bottom" class="text-end" size="100">
+          <div class="ma-6">
+            <VBtn
+              icon="mdi-plus"
+              size="large"
+              color="primary"
+              elevation="8"
+              @click="dialog_post = true"
+            ></VBtn>
+          </div>
+        </VLayoutItem> -->
       </v-container>
     </v-main>
-    <!-- add post -->
-    <v-dialog
-      v-model="dialog_post"
-      large
-      width="auto"
-      min-width="600px"
-      persistent
-    >
-      <template v-slot:default="{ isActive }">
-        <v-card>
-          <v-toolbar color="primary" title="Create a new post"></v-toolbar>
-          <v-card-text class="pa-6">
-            <v-text-field
-              label="Title"
-              v-model="title"
-              outlined
-              hide-details
-              class="mb-4"
-            ></v-text-field>
-            <v-textarea
-              label="Message"
-              v-model="message"
-              outlined
-              hide-details
-            ></v-textarea>
-          </v-card-text>
-          <v-card-action class="pb-4 px-3 text-right">
-            <v-btn variant="text" color="primary" @click="dialog_post = false">
-              Cancel
-            </v-btn>
-            <v-btn
-              variant="text"
-              color="primary"
-              @click="create_post"
-              :disabled="!title || !message"
-            >
-              Post
-            </v-btn>
-          </v-card-action>
-        </v-card>
-      </template>
-    </v-dialog>
     <!-- add friend -->
     <v-dialog
       v-model="dialog_friend"
       large
       width="auto"
       min-width="600px"
-      persistent
+      scrim="secondary_dark"
     >
-      <template v-slot:default="{ isActive }">
-        <v-card>
-          <v-toolbar color="primary" title="Add new Friend"></v-toolbar>
-          <v-card-text class="pa-6">
-            <!--  combobox with users -->
-            <v-combobox
-              v-model="selected_user"
-              :items="possible_friends"
-              label="Select a user"
-              outlined
-              hide-details
-              class="mb-4"
-            ></v-combobox>
-          </v-card-text>
-          <v-card-action class="pb-4 px-3 text-right">
-            <v-btn
-              variant="text"
-              color="primary"
-              @click="dialog_friend = false"
-            >
-              Cancel
-            </v-btn>
-            <v-btn
-              variant="text"
-              color="primary"
-              @click="add_friend"
-              :disabled="!selected_user"
-            >
-              Add Friend
-            </v-btn>
-          </v-card-action>
-        </v-card>
-      </template>
+      <v-card>
+        <v-toolbar color="primary" title="Add new Friend"></v-toolbar>
+        <v-card-text class="pa-6">
+          <!--  combobox with users -->
+          <v-combobox
+            v-model="selected_user"
+            :items="possible_friends"
+            label="Select a user"
+            outlined
+            hide-details
+            class="mb-4"
+          ></v-combobox>
+        </v-card-text>
+        <v-card-action class="pb-4 px-3 text-right">
+          <v-btn
+            variant="text"
+            color="primary"
+            @click="add_friend"
+            :disabled="!selected_user"
+          >
+            Add Friend
+          </v-btn>
+        </v-card-action>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="dialog_profile"
+      large
+      width="auto"
+      min-width="600px"
+      scrim="secondary_dark"
+    >
+      <profile
+        :user="user_current"
+        :readonly="false"
+        @exit="dialog_profile = false"
+        @edit_profile="edit_profile"
+      ></profile>
     </v-dialog>
   </v-app>
 </template>
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from "vue";
 import axios from "../plugins/axios";
+
 import Posts from "../components/Posts.vue";
+import Profile from "../components/Profile.vue";
+import FriendList from "../components/FriendList.vue";
 
 interface User {
   name: string;
+  bio: string;
 }
 
 interface Post {
@@ -196,6 +154,8 @@ export default defineComponent({
   name: "Home",
   components: {
     Posts,
+    Profile,
+    FriendList,
   },
   props: {
     user_current: {
@@ -208,14 +168,16 @@ export default defineComponent({
     },
   },
   setup(props) {
-    let friends = ref<string[]>([]);
+    let friends = ref<User[]>([]);
     let posts = ref<Post[]>([]);
     let dialog_post = ref(false);
     let title = ref("");
     let message = ref("");
     let selected_user = ref("");
     let dialog_friend = ref(false);
+    let dialog_profile = ref(false);
     let user_current = computed(() => props.user_current);
+    let user_old = user_current.value.name;
 
     // mounted hook
     onMounted(() => {
@@ -226,7 +188,7 @@ export default defineComponent({
       let frnds = props.users.filter(
         (user) =>
           user.name !== user_current.value.name &&
-          !friends.value.includes(user.name)
+          friends.value.findIndex((frnd) => frnd.name === user.name) === -1
       );
 
       return frnds.map((user) => user.name);
@@ -245,16 +207,21 @@ export default defineComponent({
         text: "Chat",
         onClick: () => console.log("Chat clicked"),
       },
-      {
-        icon: "mdi-account-plus",
-        text: "Add Friend",
-        onClick: () => (dialog_friend.value = true),
-      },
-      {
-        icon: "mdi-note-plus",
-        text: "Add Post",
-        onClick: () => (dialog_post.value = true),
-      },
+      // {
+      //   icon: "mdi-account-edit",
+      //   text: "Profile",
+      //   onClick: () => (dialog_profile.value = true),
+      // },
+      // {
+      //   icon: "mdi-account-plus",
+      //   text: "Add Friend",
+      //   onClick: () => (dialog_friend.value = true),
+      // },
+      // {
+      //   icon: "mdi-note-plus",
+      //   text: "Create Post",
+      //   onClick: () => (dialog_post.value = true),
+      // },
       {
         icon: "mdi-logout",
         text: "Logout",
@@ -266,11 +233,14 @@ export default defineComponent({
       axios
         .post("/user", { user: props.user_current.name })
         .then((response) => {
-          let friends_arr: string[] = [];
+          let friends_arr: User[] = [];
           let posts_arr: Post[] = [];
 
           response.data.friends.forEach((record: any) => {
-            friends_arr.push(record._fields[0]);
+            friends_arr.push({
+              name: record._fields[0],
+              bio: record._fields[1],
+            });
           });
           response.data.posts.forEach((record: any) => {
             const post: Post = {
@@ -290,23 +260,6 @@ export default defineComponent({
         });
     }
 
-    function create_post() {
-      dialog_post.value = false;
-
-      axios
-        .post("/post", {
-          title: title.value,
-          message: message.value,
-          from: props.user_current.name,
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          get_user();
-        });
-    }
-
     function add_friend() {
       dialog_friend.value = false;
 
@@ -319,8 +272,19 @@ export default defineComponent({
           console.log(error);
         })
         .finally(() => {
+          selected_user.value = "";
           get_user();
         });
+    }
+
+    function edit_profile({ name, bio }: { name: string; bio: string }) {
+      axios
+        .post("/editProfile", {
+          user: user_old,
+          bio,
+          new_name: name,
+        })
+        .then((response) => {});
     }
 
     return {
@@ -331,12 +295,14 @@ export default defineComponent({
       dialog_post,
       title,
       message,
-      create_post,
       selected_user,
       dialog_friend,
       add_friend,
       user_current,
       possible_friends,
+      dialog_profile,
+      edit_profile,
+      get_user,
     };
   },
 });

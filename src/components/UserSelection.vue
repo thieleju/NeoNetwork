@@ -1,10 +1,17 @@
 <template>
   <v-row justify="space-around">
-    <v-dialog v-model="dialog" large persistent width="auto" min-width="400px">
+    <v-dialog
+      v-model="dialog"
+      large
+      persistent
+      width="auto"
+      min-width="400px"
+      scrim="secondary_dark_2"
+    >
       <template v-slot:default="{ isActive }">
         <v-card>
           <v-toolbar
-            color="primary"
+            color="primary_dark"
             title="Select the user you want to use"
           ></v-toolbar>
           <v-card-text class="pr-0">
@@ -15,7 +22,7 @@
                 @click="user_chosen(user)"
               >
                 <template v-slot:prepend>
-                  <v-avatar class="my-2" color="grey-darken-3" size="64">
+                  <v-avatar class="my-2" color="grey-darken-3" size="40">
                     <span class="white--text headline">{{ user.name[0] }}</span>
                   </v-avatar>
                 </template>

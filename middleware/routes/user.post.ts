@@ -23,10 +23,10 @@ router.post("/user", async (req: Request, res: Response) => {
     .run(
       `
       MATCH (u:User {name: ${user}})-[:FRIENDS_WITH]-(f:User)
-      RETURN f.name AS friend_name
+      RETURN f.name AS friend_name, f.bio AS friend_bio
       UNION
       MATCH (u:User {name: ${user}})<-[:FRIENDS_WITH]-(f:User)
-      RETURN f.name AS friend_name
+      RETURN f.name AS friend_name, f.bio AS friend_bio
       `
     )
     .then((result) => {

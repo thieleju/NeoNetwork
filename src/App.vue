@@ -16,6 +16,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from "vue";
 import axios from "./plugins/axios";
+
 import Home from "./views/Home.vue";
 import UserSelection from "./components/UserSelection.vue";
 
@@ -39,10 +40,10 @@ export default defineComponent({
       data.records.forEach((record: any) => {
         const user = {
           name: record._fields[0].properties.name,
+          bio: record._fields[0].properties.bio,
         };
         users.push(user);
       });
-
       return users;
     }
 
@@ -69,24 +70,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-/* hide the "scrim", it's pointless */
-.v-overlay--active .v-overlay__scrim {
-  display: none;
-}
-/* style the overlay container as required */
-.v-overlay--active {
-  backdrop-filter: blur(2px);
-  background: rgb(0 0 0 / 0.8);
-}
-/* if you have an auto dark theme
-   for prefers-color-scheme: dark
-   I find the 0.8 too dark
-*/
-@media (prefers-color-scheme: dark) {
-  .v-overlay--active {
-    background: rgb(0 0 0 / 0.4);
-  }
-}
-</style>

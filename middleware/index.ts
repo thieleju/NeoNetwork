@@ -21,6 +21,7 @@ import users from "./routes/users.get";
 import user from "./routes/post.post";
 import post from "./routes/user.post";
 import addFriend from "./routes/addFriend.post";
+import editProfile from "./routes/editProfile.post";
 
 import fallback from "./routes/fallback.get";
 
@@ -28,6 +29,7 @@ app.use(users);
 app.use(user);
 app.use(post);
 app.use(addFriend);
+app.use(editProfile);
 
 app.use(fallback);
 

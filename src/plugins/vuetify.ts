@@ -27,6 +27,7 @@ const dark_theme = {
     background: "#F5F5F5",
     secondary: "#424242",
     secondary_dark: "#303030",
+    secondary_dark_2: "#212121",
     accent: "#82B1FF",
     error: "#FF5252",
     info: "#2196F3",
