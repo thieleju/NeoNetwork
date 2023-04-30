@@ -1,0 +1,34 @@
+version: "3.8"
+
+networks:
+  neo4j:
+
+services:
+  frontend:
+    hostname: frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    ports:
+      - "8080:80"
+    networks:
+      - neo4j
+
+  middleware:
+    hostname: middleware
+    build:
+      context: ./middleware/
+      dockerfile: Dockerfile
+    environment:
+      - PORT=${PORT}
+      - NEO4J_HOST=${NEO4J_HOST}
+      - NEO4J_PORT=${NEO4J_USER}
+      - NEO4J_USER=${NEO4J_USER}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD}
+      - FRONTEND=${FRONTEND}
+    ports: 
+      - "3333:3333"
+    networks:
+      - neo4j
