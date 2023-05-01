@@ -6,11 +6,7 @@
       height="50"
     >
     </v-toolbar>
-    <v-list
-      class="px-6 overflow-y-auto"
-      v-if="friends.length > 0"
-      max-height="800"
-    >
+    <v-list class="px-6 overflow-y-auto" max-height="800">
       <!-- You -->
       <v-list-item
         class="d-flex align-center"
@@ -31,12 +27,13 @@
       </v-list-item>
     </v-list>
     <v-divider></v-divider>
+
+    <!-- Friends -->
     <v-list
       class="px-6 overflow-y-auto"
       v-if="friends.length > 0"
       max-height="800"
     >
-      <!-- Friends -->
       <v-list-item
         v-for="(friend, index) in friends"
         :key="index"
@@ -54,6 +51,7 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+
     <!-- no friends -->
     <v-card-text v-else>
       <v-list>

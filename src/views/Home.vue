@@ -54,6 +54,7 @@
             <posts
               :posts="posts"
               :user_current="user_current"
+              :role="role"
               @update="get_user"
             ></posts>
           </v-col>
@@ -62,6 +63,7 @@
             <friend-list
               :friends="friends"
               :current_user="user_current"
+              :role="role"
               @open_profile="dialog_profile = true"
               @add_friend="dialog_friend = true"
             >
@@ -178,6 +180,7 @@ export default defineComponent({
     let dialog_profile = ref(false);
     let user_current = computed(() => props.user_current);
     let user_old = user_current.value.name;
+    let role = ref("");
 
     // mounted hook
     onMounted(() => {
@@ -235,6 +238,8 @@ export default defineComponent({
         .then((response) => {
           let friends_arr: User[] = [];
           let posts_arr: Post[] = [];
+
+          role.value = response.data.role[0]?._fields[0]?.properties.name;
 
           response.data.friends.forEach((record: any) => {
             friends_arr.push({
@@ -303,6 +308,7 @@ export default defineComponent({
       dialog_profile,
       edit_profile,
       get_user,
+      role,
     };
   },
 });

@@ -45,11 +45,12 @@
         Reset
       </v-btn>
       <v-btn
-        v-if="!editing && !readonly"
+        v-if="!readonly"
         @click="editing = true"
         color="primary"
         variant="text"
         prepend-icon="mdi-pencil"
+        :disabled="editing"
       >
         Edit
       </v-btn>

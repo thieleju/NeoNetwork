@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 
-import { driver } from "../neo4jDriver";
+import { executeQuery } from "../executeQuery";
 
 const router = express.Router();
 
@@ -10,34 +10,18 @@ router.post("/addFriend", async (req: Request, res: Response) => {
     return;
   }
 
-  const session = driver.session({
-    database: "neo4j",
-  });
-
   const user = JSON.stringify(req.body.user);
   const friend = JSON.stringify(req.body.friend);
+  const errors = [];
 
-  let re;
+  const response = await executeQuery(`
+    MATCH (u1:User {name: ${user}}), (u2:User {name: ${friend}})
+    CREATE (u1)-[:FRIENDS_WITH]->(u2)
+  `).catch((error) => errors.push(error));
 
-  await session
-    .run(
-      `
-      MATCH (u1:User {name: ${user}}), (u2:User {name: ${friend}})
-      CREATE (u1)-[:FRIENDS_WITH]->(u2)
-      `
-    )
-    .then((result) => {
-      re = result.records;
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ message: "Error from Neo4J Database" });
-      return;
-    });
-
-  session.close();
-
-  res.status(200).json({ response: re });
+  if (errors.length > 0)
+    res.status(500).json({ message: "Internal Server Error" });
+  else res.status(200).json({ response });
 });
 
 export default router;

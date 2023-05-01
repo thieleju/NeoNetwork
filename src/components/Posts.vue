@@ -45,16 +45,31 @@
 
       <!-- POSTS -->
       <div v-if="posts.length > 0">
-        <div v-for="post in posts">
+        <div v-for="(post, index) in posts">
           <v-card class="ma-5" color="secondary_dark">
-            <v-card-title class="text-h5">{{ post.title }}</v-card-title>
-            <v-card-text style="white-space: pre">{{
+            <v-card-title
+              class="d-flex justify-space-between align-center pr-2"
+            >
+              <div>{{ post.title }}</div>
+              <v-btn
+                v-if="role === 'admin' || post.from === 'You'"
+                icon
+                variant="text"
+                color="primary_dark"
+                elevation="0"
+                size="small"
+                @click="delete_post(index)"
+              >
+                <v-icon>mdi-cancel</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-card-text style="white-space: pre; word-break: break-word">{{
               post.message
             }}</v-card-text>
             <v-card-subtitle class="pb-4 text-button" style="text-align: right">
               <v-icon>mdi-account</v-icon>
-              {{ post.from }}</v-card-subtitle
-            >
+              {{ post.from }}
+            </v-card-subtitle>
           </v-card>
         </div>
       </div>
@@ -100,6 +115,10 @@ export default defineComponent({
       type: Object as () => User,
       required: true,
     },
+    role: {
+      type: String,
+      required: true,
+    },
   },
   setup(props, ctx) {
     const title = ref("");
@@ -117,6 +136,29 @@ export default defineComponent({
         })
         .finally(() => {
           ctx.emit("update");
+          title.value = "";
+          message.value = "";
+        });
+    }
+
+    function delete_post(index: number) {
+      if (props.posts[index].from !== "You" && props.role !== "admin") return;
+
+      const removed = props.posts.splice(index, 1)[0];
+
+      if (removed.from == "You") removed.from = props.user_current.name;
+
+      axios
+        .post("/deletePost", {
+          user: removed.from,
+          title: removed.title,
+          message: removed.message,
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          ctx.emit("update");
         });
     }
 
@@ -124,6 +166,7 @@ export default defineComponent({
       title,
       message,
       create_post,
+      delete_post,
     };
   },
 });

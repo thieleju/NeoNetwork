@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 
-import { driver } from "../neo4jDriver";
+import { executeQuery } from "../executeQuery";
 
 const router = express.Router();
 
@@ -10,37 +10,21 @@ router.post("/editProfile", async (req: Request, res: Response) => {
     return;
   }
 
-  const session = driver.session({
-    database: "neo4j",
-  });
-
   const user = JSON.stringify(req.body.user);
   const bio = JSON.stringify(req.body.bio);
   const new_name = JSON.stringify(req.body.new_name);
+  const errors = [];
 
-  let re;
+  await executeQuery(`
+    MATCH (u:User {name: ${user}})
+    SET u.bio = ${bio}
+    SET u.name = ${new_name}
+    RETURN u
+    `).catch((error) => errors.push(error));
 
-  await session
-    .run(
-      `
-      MATCH (u:User {name: ${user}})
-      SET u.bio = ${bio}
-      SET u.name = ${new_name}
-      RETURN u
-      `
-    )
-    .then((result) => {
-      re = result.records;
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json({ message: "Error from Neo4J Database" });
-      return;
-    });
-
-  session.close();
-
-  res.status(200).json({ message: "Updated username and bio" });
+  if (errors.length > 0)
+    res.status(500).json({ message: "Internal Server Error" });
+  else res.status(200).json({ message: "Updated username and bio" });
 });
 
 export default router;
