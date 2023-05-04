@@ -58,6 +58,15 @@
               @update="get_user"
             ></posts>
           </v-col>
+          <!-- CHAT -->
+          <v-col cols="8" v-if="menu === 'chat'">
+            <Chat
+              :user_current="user_current"
+              :role="role"
+              :friends="friends"
+              @update="get_user"
+            ></Chat>
+          </v-col>
           <!-- FRIENDS -->
           <v-col cols="4">
             <friend-list
@@ -140,6 +149,7 @@ import axios from "../plugins/axios";
 import Posts from "../components/Posts.vue";
 import Profile from "../components/Profile.vue";
 import FriendList from "../components/FriendList.vue";
+import Chat from "../components/Chat.vue";
 
 interface User {
   name: string;
@@ -158,6 +168,7 @@ export default defineComponent({
     Posts,
     Profile,
     FriendList,
+    Chat,
   },
   props: {
     user_current: {
@@ -279,7 +290,9 @@ export default defineComponent({
     }
 
     function change_menu(menu_str: string) {
+      if (menu.value === menu_str) return;
       menu.value = menu_str;
+      console.log(`Switched to ${menu_str}`);
     }
 
     return {

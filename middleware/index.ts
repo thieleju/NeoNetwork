@@ -24,6 +24,7 @@ import addFriend from "./routes/addFriend.post";
 import editProfile from "./routes/editProfile.post";
 import deletePost from "./routes/deletePost.post";
 import friends from "./routes/friends.post";
+import sendMsg from "./routes/sendMsg.post";
 
 import fallback from "./routes/fallback.get";
 
@@ -34,6 +35,7 @@ app.use(addFriend);
 app.use(editProfile);
 app.use(deletePost);
 app.use(friends);
+app.use(sendMsg);
 
 app.use(fallback);
 
