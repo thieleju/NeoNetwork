@@ -83,6 +83,7 @@
     <profile
       :user="selected_user"
       :readonly="true"
+      :common_friends="common_friends"
       @exit="dialog_profile = false"
     ></profile>
   </v-dialog>
@@ -90,6 +91,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref, onMounted } from "vue";
+import axios from "../plugins/axios";
 
 import Profile from "./Profile.vue";
 
@@ -117,23 +119,48 @@ export default defineComponent({
   setup(props, ctx) {
     const dialog = ref(true);
     const dialog_profile = ref(false);
+    const common_friends = ref<Array<User>>([]);
     let selected_user = ref<User>({
       name: "",
       bio: "",
     });
 
-    onMounted(() => {});
-
-    function open_profile(friend: User) {
+    async function open_profile(friend: User) {
       dialog_profile.value = true;
       selected_user.value = friend;
+
+      await get_friends_of_user(friend.name).then((response) => {
+        common_friends.value = response;
+      });
+      console.log(common_friends.value);
     }
+
+    async function get_friends_of_user(otherUser: string) {
+      return axios
+        .post("/friends", {
+          user: props.current_user.name,
+          otherUser: otherUser,
+        })
+        .then((response) => {
+          // extract friends names
+          return response.data.records.map((record: any) => {
+            return record._fields[0];
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          return [];
+        });
+    }
+
+    onMounted(() => {});
 
     return {
       dialog,
       open_profile,
       dialog_profile,
       selected_user,
+      common_friends,
     };
   },
 });

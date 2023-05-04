@@ -50,7 +50,7 @@
       <v-container class="py-8 px-6" fluid>
         <v-row>
           <!-- POSTS -->
-          <v-col cols="8">
+          <v-col cols="8" v-if="menu === 'posts'">
             <posts
               :posts="posts"
               :user_current="user_current"
@@ -181,6 +181,7 @@ export default defineComponent({
     let user_current = computed(() => props.user_current);
     let user_old = user_current.value.name;
     let role = ref("");
+    let menu = ref("posts");
 
     // mounted hook
     onMounted(() => {
@@ -203,28 +204,13 @@ export default defineComponent({
       {
         icon: "mdi-view-dashboard",
         text: "Dashboard",
-        onClick: () => console.log("Dashboard clicked"),
+        onClick: () => change_menu("posts"),
       },
       {
         icon: "mdi-message",
         text: "Chat",
-        onClick: () => console.log("Chat clicked"),
+        onClick: () => change_menu("chat"),
       },
-      // {
-      //   icon: "mdi-account-edit",
-      //   text: "Profile",
-      //   onClick: () => (dialog_profile.value = true),
-      // },
-      // {
-      //   icon: "mdi-account-plus",
-      //   text: "Add Friend",
-      //   onClick: () => (dialog_friend.value = true),
-      // },
-      // {
-      //   icon: "mdi-note-plus",
-      //   text: "Create Post",
-      //   onClick: () => (dialog_post.value = true),
-      // },
       {
         icon: "mdi-logout",
         text: "Logout",
@@ -292,6 +278,10 @@ export default defineComponent({
         .then((response) => {});
     }
 
+    function change_menu(menu_str: string) {
+      menu.value = menu_str;
+    }
+
     return {
       drawer,
       links,
@@ -309,6 +299,8 @@ export default defineComponent({
       edit_profile,
       get_user,
       role,
+      menu,
+      change_menu,
     };
   },
 });

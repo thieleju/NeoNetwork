@@ -31,9 +31,25 @@
           ></v-textarea>
         </v-col>
       </v-row>
+      <v-row v-if="common_friends.length" class="ml-10">
+        <v-col>
+          <v-list>
+            <v-subheader
+              >Common Friends ({{ common_friends.length }})</v-subheader
+            >
+            <v-list-item>
+              <v-list-item-content>
+                <v-list-item-title>{{
+                  common_friends.join(", ")
+                }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-col>
+      </v-row>
     </v-card-text>
     <!-- Buttons -->
-    <v-card-action class="pb-4 px-3 text-right">
+    <v-card-action class="pb-4 px-3 text-right" v-if="!readonly">
       <v-btn
         v-if="!readonly"
         @click="resetEdit"
@@ -70,6 +86,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, watch } from "vue";
+import axios from "../plugins/axios";
 
 export default defineComponent({
   name: "Profile",
@@ -83,6 +100,10 @@ export default defineComponent({
     readonly: {
       type: Boolean,
       default: true,
+    },
+    common_friends: {
+      type: Array,
+      default: () => [],
     },
   },
   setup(props, ctx) {
