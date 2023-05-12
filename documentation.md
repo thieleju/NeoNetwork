@@ -31,7 +31,11 @@ User1
 10. Als **Benutzer** möchte ich **Posts erstellen**, um **anderen Nutzern meine Gedanken zu teilen**.
 11. Als **Benutzer** möchte ich **die Suchfunktion nutzen**, um **Freunde zu finden**.
 12. Als **Administrator** möchte ich **Posts löschen können wenn diese unangemessen sind**, um **Ärgernisse zu vermeiden**.
-
+13. Als **Benutzer** möchte ich **mein Profil bearbeiten**, um **meine Informationen zu aktualisieren**.
+14. Als **Benutzer** möchte ich **mein Profil löschen**, um **meine Daten zu löschen**.
+15. Als **Benutzer** möcht ich **sehen, wer meiner Freunde online ist**, um **mit ihnen zu kommunizieren**.
+16. Als **Benutzer** möchte ich **mein Profilbild ändern**, um **mein Profil zu personalisieren**.
+17. Als **Benutzer** möchte ich **Post meiner Freunde kommentieren können**, um **mit ihnen zu kommunizieren**.
 
 ## Features
 
