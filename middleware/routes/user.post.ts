@@ -17,19 +17,15 @@ router.post("/user", async (req: Request, res: Response) => {
   const friends = await executeQuery(`
     MATCH (u:User {name: ${user}})-[:FRIENDS_WITH]-(f:User)
     RETURN f.name AS friend_name, f.bio AS friend_bio
-    UNION
-    MATCH (u:User {name: ${user}})<-[:FRIENDS_WITH]-(f:User)
-    RETURN f.name AS friend_name, f.bio AS friend_bio
   `).catch((error) => errors.push(error));
 
   const posts = await executeQuery(`
-    MATCH (me:User {name: ${user}})-[:POSTED]->(myPosts:Post)
+    MATCH (me:User { name: ${user}})-[:POSTED]->(myPosts:Post)
     RETURN me.name AS username, myPosts.title AS title, myPosts.message AS message
     UNION
-    MATCH (me:User {name: ${user}})-[:FRIENDS_WITH]-(friend:User)-[:POSTED]->(friendPosts:Post)
-    WHERE friend <> me
+    MATCH (me:User { name: ${user}})-[:FRIENDS_WITH]-(friend:User)-[:POSTED]->(friendPosts:Post)
     RETURN friend.name AS username, friendPosts.title AS title, friendPosts.message AS message
-  `).catch((error) => errors.push(error));
+    `).catch((error) => errors.push(error));
 
   const role = await executeQuery(`
     MATCH (u:User {name: ${user}})-[:HAS_ROLE]->(r:Role)

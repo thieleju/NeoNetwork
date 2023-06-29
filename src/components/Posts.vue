@@ -63,7 +63,7 @@
                 <v-icon>mdi-cancel</v-icon>
               </v-btn>
             </v-card-title>
-            <v-card-text style="white-space: pre; word-break: break-word">{{
+            <v-card-text style="word-break: break-word">{{
               post.message
             }}</v-card-text>
             <v-card-subtitle class="pb-4 text-button" style="text-align: right">

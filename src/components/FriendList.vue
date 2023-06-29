@@ -1,5 +1,5 @@
 <template>
-  <v-card min-height="600">
+  <v-card min-height="600" max-height="80vh">
     <v-toolbar
       color="primary_dark"
       :title="'Friends (' + friends.length + ')'"
@@ -29,28 +29,32 @@
     <v-divider></v-divider>
 
     <!-- Friends -->
-    <v-list
-      class="px-6 overflow-y-auto"
+    <div
       v-if="friends.length > 0"
-      max-height="800"
+      style="position: relative; min-height: 500px"
     >
-      <v-list-item
-        v-for="(friend, index) in friends"
-        :key="index"
-        link
-        class="d-flex align-center"
-        @click="open_profile(friend)"
+      <v-list
+        class="px-6"
+        style="overflow-y: auto; max-height: 500px; z-index: 1"
       >
-        <template v-slot:prepend>
-          <v-avatar class="my-1" color="grey-darken-3" size="55">
-            <span class="white--text headline">{{ friend.name[0] }}</span>
-          </v-avatar>
-        </template>
-        <v-list-item-content>
-          <v-list-item-title>{{ friend.name }}</v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
+        <v-list-item
+          v-for="(friend, index) in friends"
+          :key="index"
+          link
+          class="d-flex align-center"
+          @click="open_profile(friend)"
+        >
+          <template v-slot:prepend>
+            <v-avatar class="my-1" color="grey-darken-3" size="55">
+              <span class="white--text headline">{{ friend.name[0] }}</span>
+            </v-avatar>
+          </template>
+          <v-list-item-content>
+            <v-list-item-title>{{ friend.name }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </div>
 
     <!-- no friends -->
     <v-card-text v-else>
@@ -63,7 +67,7 @@
       </v-list>
     </v-card-text>
     <!-- Footer with add Friends button -->
-    <div style="position: absolute; bottom: 0; width: 100%">
+    <div style="position: absolute; bottom: 0; width: 100%; z-index: 2">
       <v-divider></v-divider>
 
       <v-card-actions>

@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.get("/users", async (req: Request, res: Response) => {
   const errors = [];
-  const records = await executeQuery(`MATCH (n:User) RETURN n`).catch((error) =>
-    errors.push(error)
+  const records = await executeQuery(`MATCH (n:User) RETURN n limit 300`).catch(
+    (error) => errors.push(error)
   );
 
   if (errors.length > 0)

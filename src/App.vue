@@ -22,6 +22,7 @@ import UserSelection from "./components/UserSelection.vue";
 
 interface User {
   name: string;
+  bio: string;
 }
 
 export default defineComponent({

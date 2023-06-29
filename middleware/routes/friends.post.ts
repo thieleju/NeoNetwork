@@ -14,7 +14,7 @@ router.post("/friends", async (req: Request, res: Response) => {
   const errors = [];
 
   const records = await executeQuery(`
-    MATCH (u1:User {name: "${user}"})-[:FRIENDS_WITH]->(f:User)<-[:FRIENDS_WITH]-(u2:User {name: "${otherUser}"})
+    MATCH (u1:User {name: "${user}"})-[:FRIENDS_WITH]-(f:User)-[:FRIENDS_WITH]-(u2:User {name: "${otherUser}"})
     RETURN f.name AS common_friend  
   `).catch((error) => errors.push(error));
 
